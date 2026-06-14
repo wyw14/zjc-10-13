@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3080;
+const PORT = 3113;
 const DATA_FILE = path.join(__dirname, 'questions.json');
 
 app.use(cors());
@@ -118,7 +118,7 @@ app.get('/api/today', (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错误' });
+    res.status(500).json({ success: false, message: '服务器错�? });
   }
 });
 
@@ -151,7 +151,7 @@ app.post('/api/answer', (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错误' });
+    res.status(500).json({ success: false, message: '服务器错�? });
   }
 });
 
@@ -216,7 +216,7 @@ app.get('/api/history', (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错误' });
+    res.status(500).json({ success: false, message: '服务器错�? });
   }
 });
 
@@ -229,13 +229,13 @@ app.get('/api/question-bank', (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错误' });
+    res.status(500).json({ success: false, message: '服务器错�? });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`每日问答后端服务已启动: http://localhost:${PORT}`);
+  console.log(`每日问答后端服务已启�? http://localhost:${PORT}`);
   const data = readData();
   ensureTodayQuestion(data);
-  console.log(`今日问题已准备就绪: ${data.currentQuestion.question}`);
+  console.log(`今日问题已准备就�? ${data.currentQuestion.question}`);
 });
