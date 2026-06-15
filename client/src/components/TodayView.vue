@@ -31,7 +31,13 @@
     </button>
 
     <div v-if="data.answered && data.answer" class="displayed-answer">
-      <h4>📝 已保存的回答：</h4>
+      <div class="answer-title-row">
+        <h4>📝 已保存的回答：</h4>
+        <span v-if="data.currentVersion" class="version-badge">
+          版本 {{ data.currentVersion }}
+          <span v-if="data.versionsCount"> (共 {{ data.versionsCount }} 个版本)</span>
+        </span>
+      </div>
       <p>{{ data.answer }}</p>
     </div>
   </div>

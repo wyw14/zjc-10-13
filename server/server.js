@@ -107,18 +107,21 @@ app.get('/api/today', (req, res) => {
     const question = ensureTodayQuestion(data);
     const todayStr = getDateString();
     const todayAnswer = data.answers[todayStr] || { answer: '', answered: false };
+    const versions = todayAnswer.versions || [];
     res.json({
       success: true,
       data: {
         question: question,
         answer: todayAnswer.answer,
         answered: todayAnswer.answered,
-        date: todayStr
+        date: todayStr,
+        currentVersion: todayAnswer.currentVersion || 0,
+        versionsCount: versions.length
       }
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错�? });
+    res.status(500).json({ success: false, message: '服务器错误' });
   }
 });
 
@@ -131,14 +134,28 @@ app.post('/api/answer', (req, res) => {
     const data = readData();
     ensureTodayQuestion(data);
     const todayStr = getDateString();
+    const now = new Date().toISOString();
 
-    data.answers[todayStr] = {
-      questionId: data.currentQuestion.questionId,
-      question: data.currentQuestion.question,
+    if (!data.answers[todayStr].versions) {
+      data.answers[todayStr].versions = [];
+      data.answers[todayStr].currentVersion = 0;
+    }
+
+    const newVersionNum = data.answers[todayStr].versions.length + 1;
+    const newVersion = {
+      version: newVersionNum,
       answer: answer,
-      answered: answer.trim().length > 0,
-      answeredAt: answer.trim().length > 0 ? new Date().toISOString() : null
+      savedAt: now
     };
+
+    if (answer.trim().length > 0) {
+      data.answers[todayStr].versions.push(newVersion);
+      data.answers[todayStr].currentVersion = newVersionNum;
+    }
+
+    data.answers[todayStr].answer = answer;
+    data.answers[todayStr].answered = answer.trim().length > 0;
+    data.answers[todayStr].answeredAt = answer.trim().length > 0 ? now : null;
 
     writeData(data);
     res.json({
@@ -146,12 +163,91 @@ app.post('/api/answer', (req, res) => {
       data: {
         date: todayStr,
         answered: data.answers[todayStr].answered,
-        answeredAt: data.answers[todayStr].answeredAt
+        answeredAt: data.answers[todayStr].answeredAt,
+        currentVersion: data.answers[todayStr].currentVersion,
+        versionsCount: data.answers[todayStr].versions.length
       }
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错�? });
+    res.status(500).json({ success: false, message: '服务器错误' });
+  }
+});
+
+app.get('/api/answer/:date/versions', (req, res) => {
+  try {
+    const { date } = req.params;
+    const data = readData();
+    const answer = data.answers[date];
+
+    if (!answer) {
+      return res.status(404).json({ success: false, message: '该日期没有回答记录' });
+    }
+
+    const versions = answer.versions || [];
+    const sortedVersions = [...versions].sort((a, b) => b.version - a.version);
+
+    res.json({
+      success: true,
+      data: {
+        date,
+        currentVersion: answer.currentVersion || 0,
+        versions: sortedVersions,
+        currentAnswer: answer.answer
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: '服务器错误' });
+  }
+});
+
+app.post('/api/answer/:date/versions/:version/restore', (req, res) => {
+  try {
+    const { date, version } = req.params;
+    const versionNum = parseInt(version);
+    const data = readData();
+    const answer = data.answers[date];
+
+    if (!answer) {
+      return res.status(404).json({ success: false, message: '该日期没有回答记录' });
+    }
+
+    const versions = answer.versions || [];
+    const targetVersion = versions.find(v => v.version === versionNum);
+
+    if (!targetVersion) {
+      return res.status(404).json({ success: false, message: '版本不存在' });
+    }
+
+    const now = new Date().toISOString();
+    const newVersionNum = versions.length + 1;
+    const newVersion = {
+      version: newVersionNum,
+      answer: targetVersion.answer,
+      savedAt: now,
+      restoredFrom: versionNum
+    };
+
+    versions.push(newVersion);
+    answer.answer = targetVersion.answer;
+    answer.currentVersion = newVersionNum;
+    answer.answered = true;
+    answer.answeredAt = now;
+
+    writeData(data);
+    res.json({
+      success: true,
+      data: {
+        date,
+        currentVersion: newVersionNum,
+        answer: targetVersion.answer,
+        restoredFrom: versionNum
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: '服务器错误' });
   }
 });
 
@@ -216,7 +312,7 @@ app.get('/api/history', (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错�? });
+    res.status(500).json({ success: false, message: '服务器错误' });
   }
 });
 
@@ -229,13 +325,13 @@ app.get('/api/question-bank', (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: '服务器错�? });
+    res.status(500).json({ success: false, message: '服务器错误' });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`每日问答后端服务已启�? http://localhost:${PORT}`);
+  console.log(`每日问答后端服务已启动 http://localhost:${PORT}`);
   const data = readData();
   ensureTodayQuestion(data);
-  console.log(`今日问题已准备就�? ${data.currentQuestion.question}`);
+  console.log(`今日问题已准备就绪 ${data.currentQuestion.question}`);
 });

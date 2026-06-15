@@ -62,10 +62,10 @@
     }
   ],
   "currentQuestion": {
-    "questionId": 1,
-    "question": "如果你能拥有一项超能力，你会选择什么？为什么？",
-    "date": "2026-06-14",
-    "timestamp": 1781366400000
+    "questionId": 2,
+    "question": "描述一个你最近学到的新技能，它如何改变了你的生活？",
+    "date": "2026-06-15",
+    "timestamp": 1781452800000
   },
   "answers": {
     "2026-06-10": {
@@ -102,6 +102,75 @@
       "answer": "我想拥有飞行的能力，因为可以自由地去任何地方，不用被交通限制。",
       "answered": true,
       "answeredAt": "2026-06-14T00:30:22.110Z"
+    },
+    "2026-06-15": {
+      "questionId": 2,
+      "question": "描述一个你最近学到的新技能，它如何改变了你的生活？",
+      "answer": "????????,?????????????????",
+      "answered": true,
+      "answeredAt": "2026-06-14T21:53:44.208Z",
+      "versions": [
+        {
+          "version": 1,
+          "answer": "????????,????????,???????????",
+          "savedAt": "2026-06-14T19:37:55.095Z"
+        },
+        {
+          "version": 2,
+          "answer": "??????Python??,????????????,?????????????",
+          "savedAt": "2026-06-14T19:38:13.305Z"
+        },
+        {
+          "version": 3,
+          "answer": "????????,????????,???????????",
+          "savedAt": "2026-06-14T19:40:05.864Z",
+          "restoredFrom": 1
+        },
+        {
+          "version": 4,
+          "answer": "????????,?????????",
+          "savedAt": "2026-06-14T20:54:43.278Z"
+        },
+        {
+          "version": 5,
+          "answer": "??????Python??,????????????,?????????????",
+          "savedAt": "2026-06-14T20:55:26.264Z",
+          "restoredFrom": 2
+        },
+        {
+          "version": 6,
+          "answer": "This is a test answer for version 6. I am learning web development and it's really fun!",
+          "savedAt": "2026-06-14T21:06:02.322Z"
+        },
+        {
+          "version": 7,
+          "answer": "This is a test answer for version 6. I am learning web development and it's really fun!",
+          "savedAt": "2026-06-14T21:15:14.487Z"
+        },
+        {
+          "version": 8,
+          "answer": "This is a test answer for version 6. I am learning web development and it's really fun!",
+          "savedAt": "2026-06-14T21:19:49.506Z"
+        },
+        {
+          "version": 9,
+          "answer": "This is a test answer for version 6. I am learning web development and it's really fun!",
+          "savedAt": "2026-06-14T21:19:57.527Z",
+          "restoredFrom": 7
+        },
+        {
+          "version": 10,
+          "answer": "????????,????????,???????????",
+          "savedAt": "2026-06-14T21:52:53.047Z",
+          "restoredFrom": 3
+        },
+        {
+          "version": 11,
+          "answer": "????????,?????????????????",
+          "savedAt": "2026-06-14T21:53:44.208Z"
+        }
+      ],
+      "currentVersion": 11
     }
   }
 }
